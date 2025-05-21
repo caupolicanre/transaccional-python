@@ -1,8 +1,6 @@
 from .errors import *
 
 ERROR_MAP = {
-    'hourly_limit_reached': ESTRHourlyLimitReachedError('Hourly limit reached. Please try again later.'),
-    'forbidden': ESTRForbiddenError('Make sure API Key is correct and not disabled.'),
     'json_invalid': ESTRJsonInvalidError('The JSON sent in the body is invalid.'),
     'from_required': ESTRFromError('It is required to inform the sender of the email (from).'),
     'from_invalid': ESTRFromError('The “from” field has an invalid email value.'),
@@ -32,6 +30,10 @@ class ExceptionHandler():
         """
         response_msg = response.get('msg')
 
+        if http_code == 429:
+            raise ESTRHourlyLimitReachedError('Hourly limit reached. Please try again later.')
+        if http_code == 403:
+            raise ESTRForbiddenError('Make sure API Key is correct and not disabled.')
         if response_msg in ERROR_MAP:
             raise ERROR_MAP[response_msg]
 
