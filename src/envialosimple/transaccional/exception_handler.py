@@ -33,7 +33,6 @@ class ExceptionHandler():
         response_msg = response.get('msg')
 
         if response_msg in ERROR_MAP:
-            error_class = ERROR_MAP[response_msg]
-            raise error_class
+            raise ERROR_MAP[response_msg]
 
         raise ESTRError(f'The server responded with code {http_code}. Message: {response_msg}')
